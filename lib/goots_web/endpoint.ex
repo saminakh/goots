@@ -7,7 +7,7 @@ defmodule GootsWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_goots_key",
-    signing_salt: "THFRul/P"
+    signing_salt: "3L+ANh0W"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]

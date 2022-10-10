@@ -15,9 +15,8 @@ defmodule Goots.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Goots.PubSub},
       # Start the Endpoint (http/https)
-      GootsWeb.Endpoint
-      # Start a worker by calling: Goots.Worker.start_link(arg)
-      # {Goots.Worker, arg}
+      GootsWeb.Endpoint,
+      Goots.Commands
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

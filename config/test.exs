@@ -17,7 +17,7 @@ config :goots, Goots.Repo,
 # you can enable the server option below.
 config :goots, GootsWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "OEmJ5wyWaeQa7X/tMKMusU7PAUqlDIdaoQp4LoRTq1iAF5QLYehAAivnA+fq37l9",
+  secret_key_base: "WeDmdkpQqADMgBshF0QdKEh/NbN4wQc4Hy2pbLL3kObbq+FIH4+4Stqvneet7GWK",
   server: false
 
 # In test we don't send emails.

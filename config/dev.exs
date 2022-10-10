@@ -23,7 +23,7 @@ config :goots, GootsWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "+u7th9JtvF5Kb+aiZapZrmV34ctx5U3tWtzXzMzAJFgIMY0z0aA6F2F17nntSBCt",
+  secret_key_base: "1AwOTeqq7TlMCNfX1VttMLAyvMGPaJCF36CpPZ5N1X1j8VlHris5WkwQkL8xPfG/",
   watchers: [
     # Start the esbuild watcher by calling Esbuild.install_and_run(:default, args)
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]}

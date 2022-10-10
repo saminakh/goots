@@ -15,7 +15,7 @@ config :goots, GootsWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [view: GootsWeb.ErrorView, accepts: ~w(html json), layout: false],
   pubsub_server: Goots.PubSub,
-  live_view: [signing_salt: "LXFc4My9"]
+  live_view: [signing_salt: "/QFRPrYI"]
 
 # Configures the mailer
 #
@@ -46,6 +46,19 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :nostrum,
+  token: "my_token",
+  log_full_events: true,
+  log_dispatch_events: true,
+  gateway_intents: [
+    :guilds,
+    :guild_voice_states,
+    :guild_presences,
+    :guild_messages,
+    :direct_messages,
+    :message_content
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
