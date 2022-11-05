@@ -34,6 +34,7 @@ RUN mix local.hex --force && \
 
 # set build ENV
 ENV MIX_ENV="prod"
+ENV BOT_TOKEN=$BOT_TOKEN
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
@@ -89,6 +90,7 @@ RUN chown nobody /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
+ENV BOT_TOKEN=$BOT_TOKEN
 
 # Only copy the final release from the build stage
 COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/goots ./
@@ -96,6 +98,3 @@ COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/goots ./
 USER nobody
 
 CMD ["/app/bin/server"]
-# Appended by flyctl
-ENV ECTO_IPV6 true
-ENV ERL_AFLAGS "-proto_dist inet6_tcp"
