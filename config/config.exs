@@ -48,7 +48,7 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :nostrum,
-  token: "my_token",
+  token: System.get_env("BOT_TOKEN"),
   log_full_events: true,
   log_dispatch_events: true,
   gateway_intents: [

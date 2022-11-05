@@ -4,8 +4,8 @@ defmodule Goots.Commands do
   alias Nostrum.{Api, Voice}
   alias Goots.VodHistory
 
-  @guild_id 0
-  @channel_id 0
+  @guild_id 231_268_398_523_219_968
+  @channel_id 1_029_200_744_475_283_527
 
   require Logger
 
