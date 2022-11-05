@@ -19,7 +19,7 @@ defmodule Goots.Commands do
         Api.create_message(msg.channel_id, "pong!")
 
       "!max" ->
-        path = image_path("max.jpg")
+        path = asset_path("max.jpg", :image)
 
         Api.create_message(msg.channel_id,
           content: "I love you Christopher UWU",
@@ -27,12 +27,22 @@ defmodule Goots.Commands do
         )
 
       "!blidd" ->
-        path = image_path("fancycat.jpg")
+        path = asset_path("fancycat.jpg", :image)
 
         Api.create_message(msg.channel_id,
           content: "https://www.designbyhumans.com/shop/Blidd",
           file: path
         )
+
+      "!smol" ->
+        path = asset_path("so_smol.ogg", :audio)
+
+        if Voice.ready?(@guild_id) do
+          raw_data = File.read!(path)
+          Voice.play(@guild_id, raw_data, :pipe)
+        else
+          Logger.info("Not connected")
+        end
 
       "!connect" ->
         Voice.join_channel(@guild_id, @channel_id)
@@ -64,5 +74,9 @@ defmodule Goots.Commands do
     :noop
   end
 
-  defp image_path(filename), do: Path.join([:code.priv_dir(:goots), "static", "images", filename])
+  defp asset_path(filename, :image),
+    do: Path.join([:code.priv_dir(:goots), "static", "images", filename])
+
+  defp asset_path(filename, :audio),
+    do: Path.join([:code.priv_dir(:goots), "static", "sounds", filename])
 end
