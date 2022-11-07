@@ -44,6 +44,16 @@ defmodule Goots.Commands do
           Logger.info("Not connected")
         end
 
+      "!honk" ->
+        path = asset_path("honk.ogg", :audio)
+
+        if Voice.ready?(@guild_id) do
+          raw_data = File.read!(path)
+          Voice.play(@guild_id, raw_data, :pipe)
+        else
+          Logger.info("Not connected")
+        end
+
       "!connect" ->
         Voice.join_channel(@guild_id, @channel_id)
         Logger.info("Connecting")

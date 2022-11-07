@@ -81,16 +81,16 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
-config :nostrum,
-  token: System.get_env("BOT_TOKEN"),
-  log_full_events: true,
-  log_dispatch_events: true,
-  gateway_intents: [
-    :guilds,
-    :guild_voice_states,
-    :guild_presences,
-    :guild_messages,
-    :direct_messages,
-    :message_content
-  ]
+  config :nostrum,
+    token: System.get_env("BOT_TOKEN"),
+    log_full_events: true,
+    log_dispatch_events: true,
+    gateway_intents: [
+      :guilds,
+      :guild_voice_states,
+      :guild_presences,
+      :guild_messages,
+      :direct_messages,
+      :message_content
+    ]
 end
