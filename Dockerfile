@@ -34,7 +34,6 @@ RUN mix local.hex --force && \
 
 # set build ENV
 ENV MIX_ENV="prod"
-ENV BOT_TOKEN=$BOT_TOKEN
 
 # install mix dependencies
 COPY mix.exs mix.lock ./

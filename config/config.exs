@@ -47,18 +47,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :nostrum,
-  token: System.get_env("BOT_TOKEN"),
-  log_full_events: true,
-  log_dispatch_events: true,
-  gateway_intents: [
-    :guilds,
-    :guild_voice_states,
-    :guild_presences,
-    :guild_messages,
-    :direct_messages,
-    :message_content
-  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
