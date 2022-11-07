@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:1.2
+
 # Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian instead of
 # Alpine to avoid DNS resolution issues in production.
 #
@@ -35,6 +37,11 @@ RUN mix local.hex --force && \
 # set build ENV
 ENV MIX_ENV="prod"
 
+ENV BOT_TOKEN=$BOT_TOKEN
+ENV DATABASE_URL=$DATABASE_URL
+ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
+ENV PHX_HOST=$PHX_HOST
+
 # install mix dependencies
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
@@ -56,13 +63,13 @@ COPY assets assets
 RUN mix assets.deploy
 
 # Compile the release
-RUN mix compile
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
 COPY rel rel
-RUN mix release
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
@@ -85,7 +92,7 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 WORKDIR "/app"
-RUN chown nobody /app
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env chown nobody /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
