@@ -27,10 +27,10 @@ defmodule Goots.Commands do
         )
 
       "!blidd" ->
-        path = asset_path("fancycat.jpg", :image)
+        path = asset_path("blidd#{Enum.random(1..6)}.jpeg", :image)
 
         Api.create_message(msg.channel_id,
-          content: "https://www.designbyhumans.com/shop/Blidd",
+          content: "meow meow",
           file: path
         )
 
