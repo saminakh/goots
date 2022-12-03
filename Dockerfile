@@ -69,7 +69,7 @@ RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env mix compile
 COPY config/runtime.exs config/
 
 COPY rel rel
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env mix release
+RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env MIX_ENV=prod  mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
@@ -99,8 +99,9 @@ ENV MIX_ENV="prod"
 ENV BOT_TOKEN=$BOT_TOKEN
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/goots ./
+COPY --from=builder --chown=nobody:root /app/_build/prod/rel/goots ./
 
 USER nobody
 
+CMD ["/app/bin/migrate"]
 CMD ["/app/bin/server"]
