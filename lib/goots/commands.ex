@@ -68,8 +68,8 @@ defmodule Goots.Commands do
 
       "!play " <> url ->
         if Voice.ready?(@guild_id) do
-          Api.create_message(msg.channel_id, "Playing: #{url}")
-          VodHistory.save(url) |> IO.inspect
+          Api.create_message(msg.channel_id, "Ok! See the vod history and queue at https://goots-web.onrender.com")
+          VodHistory.save(url)
           Voice.play(@guild_id, url, :ytdl, realtime: true)
         else
           Logger.info("Not connected")
