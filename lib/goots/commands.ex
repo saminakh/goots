@@ -2,7 +2,7 @@ defmodule Goots.Commands do
   use Nostrum.Consumer
 
   alias Nostrum.{Api, Voice}
-  alias Goots.VodHistory
+  alias Goots.{VodHistory, Queue, Utils}
 
   @guild_id 231_268_398_523_219_968
   @channel_id 1_029_200_744_475_283_527
@@ -11,6 +11,17 @@ defmodule Goots.Commands do
 
   def start_link do
     Consumer.start_link(__MODULE__)
+  end
+
+  def handle_event({:VOICE_READY, _, _state}) do
+    case Queue.next() do
+      nil ->
+        :ignore
+
+      url ->
+        VodHistory.save(url)
+        Voice.play(@guild_id, url, :ytdl, realtime: true)
+    end
   end
 
   def handle_event({:MESSAGE_CREATE, msg, _ws_state}) do
@@ -35,10 +46,16 @@ defmodule Goots.Commands do
         )
 
       "!matt" ->
-        Api.create_message(msg.channel_id, "It looks like you want some help with world of warcraft. Try typing: \n '!matt spell_name' \n to get an explanation of the mechanic!")
+        Api.create_message(
+          msg.channel_id,
+          "It looks like you want some help with world of warcraft. Try typing: \n '!matt spell_name' \n to get an explanation of the mechanic!"
+        )
 
       "!matt " <> spell ->
-        Api.create_message(msg.channel_id, "It looks like you want help with #{spell}. Did you try standing in it? I hear it gives you haste...")
+        Api.create_message(
+          msg.channel_id,
+          "It looks like you want help with #{spell}. Did you try standing in it? I hear it gives you haste..."
+        )
 
       "!smol" ->
         path = asset_path("so_smol.ogg", :audio)
@@ -73,13 +90,7 @@ defmodule Goots.Commands do
         Logger.info("Stopping")
 
       "!play " <> url ->
-        if Voice.ready?(@guild_id) do
-          Api.create_message(msg.channel_id, "Ok! See the vod history and queue at https://goots-web.onrender.com")
-          VodHistory.save(url)
-          Voice.play(@guild_id, url, :ytdl, realtime: true)
-        else
-          Logger.info("Not connected")
-        end
+        maybe_play(url, msg.channel_id)
 
       _ ->
         :ignore
@@ -88,6 +99,30 @@ defmodule Goots.Commands do
 
   def handle_event(_event) do
     :noop
+  end
+
+  defp maybe_play(url, channel_id) do
+    cond do
+      !Utils.valid_url?(url) ->
+        Api.create_message(channel_id, "This doesn't appear to be a valid url...")
+
+      !Voice.ready?(@guild_id) ->
+        Api.create_message(
+          channel_id,
+          "Added to queue! See the vod history and queue at https://goots-web.onrender.com"
+        )
+
+        Queue.add(url)
+
+      true ->
+        Api.create_message(
+          channel_id,
+          "Playing now! See the vod history and queue at https://goots-web.onrender.com"
+        )
+
+        VodHistory.save(url)
+        Voice.play(@guild_id, url, :ytdl, realtime: true)
+    end
   end
 
   defp asset_path(filename, :image),

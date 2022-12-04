@@ -16,7 +16,8 @@ defmodule Goots.Application do
       {Phoenix.PubSub, name: Goots.PubSub},
       # Start the Endpoint (http/https)
       GootsWeb.Endpoint,
-      Goots.Commands
+      Goots.Commands,
+      Goots.Queue
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

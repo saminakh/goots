@@ -1,6 +1,6 @@
 defmodule Goots.VodHistory do
   use Ecto.Schema
-  alias Goots.Repo
+  alias Goots.{Repo, Utils}
 
   alias Ecto.Changeset
 
@@ -28,9 +28,8 @@ defmodule Goots.VodHistory do
 
   defp validate_url(cs) do
     url = Changeset.get_field(cs, :url)
-    %URI{scheme: scheme, host: host} = URI.parse(url)
 
-    if scheme != nil && host != nil && host =~ "." do
+    if Utils.valid_url?(url) do
       cs
     else
       Changeset.add_error(cs, :url, "invalid url")
