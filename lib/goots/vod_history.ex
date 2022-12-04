@@ -19,7 +19,9 @@ defmodule Goots.VodHistory do
   def save(url) do
     %{url: url}
     |> changeset
+    |> IO.inspect
     |> Repo.insert()
+    |> IO.inspect
   end
 
   def list_all do
