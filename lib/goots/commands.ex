@@ -60,7 +60,7 @@ defmodule Goots.Commands do
       "!smol" ->
         path = asset_path("so_smol.ogg", :audio)
 
-        if Voice.ready?(@guild_id) do
+        if can_play? do
           raw_data = File.read!(path)
           Voice.play(@guild_id, raw_data, :pipe)
         else
@@ -70,7 +70,7 @@ defmodule Goots.Commands do
       "!honk" ->
         path = asset_path("honk.ogg", :audio)
 
-        if Voice.ready?(@guild_id) do
+        if can_play? do
           raw_data = File.read!(path)
           Voice.play(@guild_id, raw_data, :pipe)
         else
@@ -106,7 +106,7 @@ defmodule Goots.Commands do
       !Utils.valid_url?(url) ->
         Api.create_message(channel_id, "This doesn't appear to be a valid url...")
 
-      !Voice.ready?(@guild_id) ->
+      !can_play? ->
         Api.create_message(
           channel_id,
           "Added to queue! See the vod history and queue at https://goots-web.onrender.com"
@@ -124,6 +124,8 @@ defmodule Goots.Commands do
         Voice.play(@guild_id, url, :ytdl, realtime: true)
     end
   end
+
+  defp can_play?, do: Voice.ready?(@guild_id) && !Voice.playing?(@guild_id)
 
   defp asset_path(filename, :image),
     do: Path.join([:code.priv_dir(:goots), "static", "images", filename])
