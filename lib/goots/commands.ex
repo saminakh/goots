@@ -13,14 +13,14 @@ defmodule Goots.Commands do
     Consumer.start_link(__MODULE__)
   end
 
-  def handle_event({:VOICE_READY, _, _state}) do
-    case Queue.next() do
-      nil ->
+  def handle_event({:VOICE_SPEAKING_UPDATE, _, _ws_state}) do
+    with true <- can_play?,
+         url when not is_nil(url) <- Queue.next() do
+      VodHistory.save(url)
+      Voice.play(@guild_id, url, :ytdl, realtime: true)
+    else
+      _ ->
         :ignore
-
-      url ->
-        VodHistory.save(url)
-        Voice.play(@guild_id, url, :ytdl, realtime: true)
     end
   end
 

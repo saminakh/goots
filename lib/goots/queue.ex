@@ -34,7 +34,7 @@ defmodule Goots.Queue do
     GenServer.cast(__MODULE__, {:enqueue, item})
   end
 
-  def next(item) do
+  def next() do
     GenServer.call(__MODULE__, :dequeue)
   end
 

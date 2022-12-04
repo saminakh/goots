@@ -5,7 +5,7 @@
 <h1>queue</h1>
 <section class="row">
   <ul>
-    <%= for %{url: u} <- list_queue() do %>
+    <%= for u <- list_queue() do %>
       <li><%= link u, to: u %></li>
     <% end %>
   </ul>
