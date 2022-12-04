@@ -34,6 +34,12 @@ defmodule Goots.Commands do
           file: path
         )
 
+      "!matt" ->
+        Api.create_message(msg.channel_id, "It looks like you want some help with world of warcraft. Try typing: \n '!matt spell_name' \n to get an explanation of the mechanic!")
+
+      "!matt " <> spell ->
+        Api.create_message(msg.channel_id, "It looks like you want help with #{spell}. Did you try standing in it? I hear it gives you haste...")
+
       "!smol" ->
         path = asset_path("so_smol.ogg", :audio)
 
