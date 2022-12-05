@@ -12,13 +12,13 @@ defmodule Goots.Queue do
   end
 
   @impl true
-  def handle_call(:dequeue, _from, [item | state]) do
-    {:reply, item, state}
+  def handle_call(:dequeue, _from, []) do
+    {:reply, nil, []}
   end
 
   @impl true
-  def handle_call(:dequeue, _from, []) do
-    {:reply, nil, []}
+  def handle_call(:dequeue, _from, [item | state]) do
+    {:reply, item, state}
   end
 
   @impl true
