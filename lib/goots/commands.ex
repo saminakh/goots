@@ -19,7 +19,8 @@ defmodule Goots.Commands do
       VodHistory.save(url)
       Voice.play(@guild_id, url, :ytdl, realtime: true)
     else
-      _ ->
+      err ->
+        IO.inspect(err)
         :ignore
     end
   end
