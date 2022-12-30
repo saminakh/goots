@@ -114,11 +114,13 @@ defmodule Goots.Commands do
     :noop
   end
 
-  defp play_list([url], channel_id), do: maybe_play(url, channel_id)
+  defp play_list([], channel_id), do: Api.create_message(channel_id, "No songs to queue up")
+  defp play_list(%VodHistory{url: url}, channel_id), do: maybe_play(url, channel_id)
+  defp play_list([%VodHistory{url: url}], channel_id), do: maybe_play(url, channel_id)
 
-  defp play_list([url | urls], channel_id) do
+  defp play_list([%VodHistory{url: url} | urls], channel_id) do
     maybe_play(url, channel_id)
-    Enum.each(urls, &Queue.add/1)
+    Enum.each(urls, &Queue.add(&1.url))
   end
 
   defp maybe_play(url, channel_id) do
