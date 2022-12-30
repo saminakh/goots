@@ -1,5 +1,6 @@
 defmodule Goots.VodHistory do
   use Ecto.Schema
+  import Ecto.Query
   alias Goots.{Repo, Utils}
 
   alias Ecto.Changeset
@@ -13,6 +14,7 @@ defmodule Goots.VodHistory do
   def changeset(attrs) do
     %__MODULE__{}
     |> Changeset.cast(attrs, [:url])
+    |> Changeset.unique_constraint(:url)
     |> validate_url
   end
 
@@ -25,6 +27,16 @@ defmodule Goots.VodHistory do
   def list_all do
     Repo.all(__MODULE__)
   end
+
+  def get(count) when is_integer(count) and count > 0 do
+    from(v in "vod_history",
+      order_by: fragment("RANDOM()"),
+      limit: ^count
+    )
+    |> Repo.all()
+  end
+
+  def get(_), do: []
 
   defp validate_url(cs) do
     url = Changeset.get_field(cs, :url)

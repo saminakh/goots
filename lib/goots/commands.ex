@@ -93,6 +93,18 @@ defmodule Goots.Commands do
       "!play " <> url ->
         maybe_play(url, msg.channel_id)
 
+      "!rand " <> count ->
+        with {num, ""} <- Integer.parse(count),
+             song_list <- VodHistory.get(num) do
+          play_list(song_list, msg.channel_id)
+        else
+          _ ->
+            Api.create_message(
+              msg.channel_id,
+              "This doesn't appear to be a valid count..."
+            )
+        end
+
       _ ->
         :ignore
     end
@@ -100,6 +112,13 @@ defmodule Goots.Commands do
 
   def handle_event(_event) do
     :noop
+  end
+
+  defp play_list([url], channel_id), do: maybe_play(url, channel_id)
+
+  defp play_list([url | urls], channel_id) do
+    maybe_play(url, channel_id)
+    Enum.each(urls, &Queue.add/1)
   end
 
   defp maybe_play(url, channel_id) do
