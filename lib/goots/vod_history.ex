@@ -29,7 +29,7 @@ defmodule Goots.VodHistory do
   end
 
   def get(count) when is_integer(count) and count > 0 do
-    from(v in "vod_history",
+    from(v in __MODULE__,
       order_by: fragment("RANDOM()"),
       limit: ^count
     )
