@@ -147,7 +147,12 @@ defmodule Goots.Commands do
     end
   end
 
-  defp can_play?, do: Voice.ready?(@guild_id) && !Voice.playing?(@guild_id)
+  defp can_play? do
+    IO.inspect(@guild_id)
+    IO.inspect(Voice.ready?(@guild_id))
+    IO.inspect(Voice.playing?(@guild_id))
+    Voice.ready?(@guild_id) && !Voice.playing?(@guild_id)
+  end
 
   defp asset_path(filename, :image),
     do: Path.join([:code.priv_dir(:goots), "static", "images", filename])
