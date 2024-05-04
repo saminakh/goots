@@ -1,43 +1,35 @@
-# fly.toml file generated for goots on 2022-10-10T14:28:00-06:00
+# fly.toml app configuration file generated for goots on 2024-05-25T19:55:11-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
 
-app = "goots"
-kill_signal = "SIGTERM"
-kill_timeout = 5
-processes = []
+app = 'goots'
+primary_region = 'ord'
+kill_signal = 'SIGTERM'
+
+[build]
 
 [deploy]
-  release_command = "/app/bin/migrate"
+  release_command = '/app/bin/migrate'
 
 [env]
-  PHX_HOST = "goots.fly.dev"
-  PORT = "8080"
+  PHX_HOST = 'goots.fly.dev'
+  PORT = '8080'
 
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
-
-[[services]]
-  http_checks = []
+[http_service]
   internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 0
+  processes = ['app']
 
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
+  [http_service.concurrency]
+    type = 'connections'
+    hard_limit = 1000
+    soft_limit = 1000
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
-
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

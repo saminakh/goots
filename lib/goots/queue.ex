@@ -2,13 +2,18 @@ defmodule Goots.Queue do
   use GenServer
 
   @impl true
-  def init(state) do
-    {:ok, state}
+  def init(_ \\ []) do
+    {:ok, []}
   end
 
   @impl true
   def handle_call(:list, _from, state) do
-    {:reply, state, state}
+    {:reply, Enum.reverse(state), state}
+  end
+
+  @impl true
+  def handle_call(:reset, _from, _state) do
+    {:reply, [], []}
   end
 
   @impl true
@@ -23,11 +28,11 @@ defmodule Goots.Queue do
 
   @impl true
   def handle_cast({:enqueue, item}, state) do
-    {:noreply, [item | state]}
+    {:noreply, state ++ [item]}
   end
 
-  def start_link(state) do
-    {:ok, pid} = GenServer.start_link(__MODULE__, state, name: __MODULE__)
+  def start_link(_state) do
+    {:ok, _pid} = GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
   def add(item) do
@@ -40,5 +45,9 @@ defmodule Goots.Queue do
 
   def list do
     GenServer.call(__MODULE__, :list)
+  end
+
+  def reset do
+    GenServer.call(__MODULE__, :reset)
   end
 end

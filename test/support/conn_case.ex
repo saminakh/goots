@@ -19,15 +19,15 @@ defmodule GootsWeb.ConnCase do
 
   using do
     quote do
+      # The default endpoint for testing
+      @endpoint GootsWeb.Endpoint
+
+      use GootsWeb, :verified_routes
+
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
       import GootsWeb.ConnCase
-
-      alias GootsWeb.Router.Helpers, as: Routes
-
-      # The default endpoint for testing
-      @endpoint GootsWeb.Endpoint
     end
   end
 

@@ -6,9 +6,7 @@ defmodule Goots.Release do
   @app :goots
 
   def migrate do
-    ensure_started()
     load_app()
-    IO.inspect("MIGRATING")
 
     for repo <- repos() do
       {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :up, all: true))
@@ -16,7 +14,6 @@ defmodule Goots.Release do
   end
 
   def rollback(repo, version) do
-    ensure_started()
     load_app()
     {:ok, _, _} = Ecto.Migrator.with_repo(repo, &Ecto.Migrator.run(&1, :down, to: version))
   end
@@ -26,13 +23,6 @@ defmodule Goots.Release do
   end
 
   defp load_app do
-    IO.inspect("LOADING APP")
     Application.load(@app)
-  end
-
-  defp ensure_started do
-    IO.inspect("SSL STARTING")
-    Application.ensure_all_started(:ssl)
-    IO.inspect("SSL STARTED!")
   end
 end

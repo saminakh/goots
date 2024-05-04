@@ -5,22 +5,17 @@ defmodule Goots.Commands do
   alias Goots.{VodHistory, Queue, Utils}
 
   @guild_id 231_268_398_523_219_968
-  @channel_id 1_029_200_744_475_283_527
+  @channel_id 231_268_398_523_219_970
 
   require Logger
 
-  def start_link do
-    Consumer.start_link(__MODULE__)
-  end
-
   def handle_event({:VOICE_SPEAKING_UPDATE, _, _ws_state}) do
-    with true <- can_play?,
+    with true <- can_play?(),
          url when not is_nil(url) <- Queue.next() do
       VodHistory.save(url)
-      Voice.play(@guild_id, url, :ytdl, realtime: true)
+      Voice.play(@guild_id, url, :ytdl, realtime: true, volume: 0.5)
     else
-      err ->
-        IO.inspect(err)
+      _err ->
         :ignore
     end
   end
@@ -61,7 +56,7 @@ defmodule Goots.Commands do
       "!smol" ->
         path = asset_path("so_smol.ogg", :audio)
 
-        if can_play? do
+        if can_play?() do
           raw_data = File.read!(path)
           Voice.play(@guild_id, raw_data, :pipe)
         else
@@ -71,7 +66,7 @@ defmodule Goots.Commands do
       "!honk" ->
         path = asset_path("honk.ogg", :audio)
 
-        if can_play? do
+        if can_play?() do
           raw_data = File.read!(path)
           Voice.play(@guild_id, raw_data, :pipe)
         else
@@ -128,10 +123,10 @@ defmodule Goots.Commands do
       !Utils.valid_url?(url) ->
         Api.create_message(channel_id, "This doesn't appear to be a valid url...")
 
-      !can_play? ->
+      !can_play?() ->
         Api.create_message(
           channel_id,
-          "Added to queue! See the vod history and queue at https://goots-web.onrender.com"
+          "Added to queue!"
         )
 
         Queue.add(url)
@@ -139,18 +134,15 @@ defmodule Goots.Commands do
       true ->
         Api.create_message(
           channel_id,
-          "Playing now! See the vod history and queue at https://goots-web.onrender.com"
+          "Playing now!"
         )
 
         VodHistory.save(url)
-        Voice.play(@guild_id, url, :ytdl, realtime: true)
+        Voice.play(@guild_id, url, :ytdl, volume: 0.5)
     end
   end
 
-  defp can_play? do
-    IO.inspect(@guild_id)
-    IO.inspect(Voice.ready?(@guild_id))
-    IO.inspect(Voice.playing?(@guild_id))
+  defp can_play?() do
     Voice.ready?(@guild_id) && !Voice.playing?(@guild_id)
   end
 
