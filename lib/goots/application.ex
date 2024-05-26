@@ -18,7 +18,7 @@ defmodule Goots.Application do
       # {Goots.Worker, arg},
       # Start to serve requests, typically the last entry
       GootsWeb.Endpoint,
-      Goots.Commands,
+      Goots.Discord,
       Goots.Queue
     ]
 
