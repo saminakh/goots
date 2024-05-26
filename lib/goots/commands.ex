@@ -85,6 +85,16 @@ defmodule Goots.Commands do
 
   def handle_msg("!empty", _channel_id), do: Player.empty()
 
+  def handle_msg("!list", channel_id) do
+    with queue <- Player.list(),
+         true <- is_list(queue) && !Enum.empty?(queue),
+         msg <- Enum.join(queue, "\n") do
+      Api.create_message(channel_id, msg)
+    else
+      _ -> Api.create_message(channel_id, "Queue is empty")
+    end
+  end
+
   def handle_msg("!play " <> url, channel_id),
     do:
       url

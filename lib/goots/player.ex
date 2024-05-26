@@ -58,6 +58,8 @@ defmodule Goots.Player do
 
   def can_play?(), do: Voice.ready?(@guild_id) && !Voice.playing?(@guild_id)
 
+  def list(), do: Queue.list()
+
   defp play_now(url) do
     VodHistory.save(url)
     Voice.play(@guild_id, url, :ytdl, @ytdl_config)
