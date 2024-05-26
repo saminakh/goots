@@ -8,15 +8,17 @@ defmodule Goots.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Goots.Repo,
-      # Start the Telemetry supervisor
       GootsWeb.Telemetry,
-      # Start the PubSub system
+      Goots.Repo,
+      {DNSCluster, query: Application.get_env(:goots, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Goots.PubSub},
-      # Start the Endpoint (http/https)
+      # Start the Finch HTTP client for sending emails
+      {Finch, name: Goots.Finch},
+      # Start a worker by calling: Goots.Worker.start_link(arg)
+      # {Goots.Worker, arg},
+      # Start to serve requests, typically the last entry
       GootsWeb.Endpoint,
-      Goots.Commands,
+      Goots.Discord,
       Goots.Queue
     ]
 

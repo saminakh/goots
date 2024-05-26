@@ -1,5 +1,13 @@
 # Goots
 
+A dumb bot to play youtube in discord because youtube took down fredboat
+
+## Setup
+
+You will need:
+
+  * A bot token. Get one from the [discord developer portal](https://discord.com/developers/applications/).
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`

@@ -1,22 +1,19 @@
-# syntax = docker/dockerfile:1.2
-
-# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian instead of
-# Alpine to avoid DNS resolution issues in production.
+# Find eligible builder and runner images on Docker Hub. We use Ubuntu/Debian
+# instead of Alpine to avoid DNS resolution issues in production.
 #
 # https://hub.docker.com/r/hexpm/elixir/tags?page=1&name=ubuntu
 # https://hub.docker.com/_/ubuntu?tab=tags
 #
-#
 # This file is based on these images:
 #
 #   - https://hub.docker.com/r/hexpm/elixir/tags - for the build image
-#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20220801-slim - for the release image
+#   - https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20240423-slim - for the release image
 #   - https://pkgs.org/ - resource for finding needed packages
-#   - Ex: hexpm/elixir:1.14.0-erlang-25.1.1-debian-bullseye-20220801-slim
+#   - Ex: hexpm/elixir:1.16.2-erlang-26.2.4-debian-bullseye-20240423-slim
 #
-ARG ELIXIR_VERSION=1.14.0
-ARG OTP_VERSION=25.1.1
-ARG DEBIAN_VERSION=bullseye-20220801-slim
+ARG ELIXIR_VERSION=1.16.2
+ARG OTP_VERSION=26.2.4
+ARG DEBIAN_VERSION=bullseye-20240423-slim
 
 ARG BUILDER_IMAGE="hexpm/elixir:${ELIXIR_VERSION}-erlang-${OTP_VERSION}-debian-${DEBIAN_VERSION}"
 ARG RUNNER_IMAGE="debian:${DEBIAN_VERSION}"
@@ -38,9 +35,6 @@ RUN mix local.hex --force && \
 ENV MIX_ENV="prod"
 
 ENV BOT_TOKEN=$BOT_TOKEN
-ENV DATABASE_URL=$DATABASE_URL
-ENV SECRET_KEY_BASE=$SECRET_KEY_BASE
-ENV PHX_HOST=$PHX_HOST
 
 # install mix dependencies
 COPY mix.exs mix.lock ./
@@ -63,26 +57,28 @@ COPY assets assets
 RUN mix assets.deploy
 
 # Compile the release
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env mix compile
+RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
 COPY config/runtime.exs config/
 
 COPY rel rel
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env MIX_ENV=prod  mix release
+RUN mix release
 
 # start a new build stage so that the final image will only contain
 # the compiled release and other runtime necessities
 FROM ${RUNNER_IMAGE}
 
-RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales \
+RUN apt-get update -y && \
+  apt-get install -y libstdc++6 openssl libncurses5 locales ca-certificates \
+  python3 \
+  python3-pip \
+  ffmpeg \
+  wget \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
-# install ffmpeg, youtube-dl
-RUN apt-get update
-RUN apt-get install -y curl
-RUN apt-get install -y ffmpeg
-RUN apt-get install -y youtube-dl
+# Install yt-dlp using pip
+RUN python3 -m pip install -U "yt-dlp[default]"
 
 # Set the locale
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
@@ -92,16 +88,19 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 WORKDIR "/app"
-RUN --mount=type=secret,id=_env,dst=/etc/secrets/.env chown nobody /app
+RUN chown nobody /app
 
 # set runner ENV
 ENV MIX_ENV="prod"
-ENV BOT_TOKEN=$BOT_TOKEN
 
 # Only copy the final release from the build stage
-COPY --from=builder --chown=nobody:root /app/_build/prod/rel/goots ./
+COPY --from=builder --chown=nobody:root /app/_build/${MIX_ENV}/rel/goots ./
 
 USER nobody
 
-CMD ["/app/bin/migrate"]
+# If using an environment that doesn't automatically reap zombie processes, it is
+# advised to add an init process such as tini via `apt-get install`
+# above and adding an entrypoint. See https://github.com/krallin/tini for details
+# ENTRYPOINT ["/tini", "--"]
+
 CMD ["/app/bin/server"]

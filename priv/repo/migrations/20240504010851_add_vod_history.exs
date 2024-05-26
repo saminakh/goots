@@ -1,4 +1,4 @@
-defmodule Goots.Repo.Migrations.VodHistory do
+defmodule Goots.Repo.Migrations.AddVodHistory do
   use Ecto.Migration
 
   def change do
@@ -7,5 +7,7 @@ defmodule Goots.Repo.Migrations.VodHistory do
 
       timestamps()
     end
+
+    create unique_index(:vod_history, [:url])
   end
 end

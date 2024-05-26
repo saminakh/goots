@@ -11,20 +11,27 @@ config :goots, Goots.Repo,
   hostname: "localhost",
   database: "goots_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
-  pool_size: 10
+  pool_size: System.schedulers_online() * 2
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :goots, GootsWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "WeDmdkpQqADMgBshF0QdKEh/NbN4wQc4Hy2pbLL3kObbq+FIH4+4Stqvneet7GWK",
+  secret_key_base: "mw7VuNSlvkPMIRkuaOOWTHgYClZ5BmJj5bl62cIy2i1pRqjT0hbdL8T9Avj6qggy",
   server: false
 
 # In test we don't send emails.
 config :goots, Goots.Mailer, adapter: Swoosh.Adapters.Test
 
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
+
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :phoenix_live_view,
+  # Enable helpful, but potentially expensive runtime checks
+  enable_expensive_runtime_checks: true
