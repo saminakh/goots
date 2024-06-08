@@ -1,6 +1,14 @@
-Gootsbot queue
+<h1>Now Playing</h1>
+<%= if !is_nil(@now_playing) do %>
+  <img src={@now_playing.thumbnail_url}>
+  <p>
+    <%= "title: #{@now_playing.title}" %>
+    <%= "uploader: #{@now_playing.channel_title}" %>
+  </p>
+<% end %>
+<h2>Queue</h2>
 <ul>
   <%= for item <- @queue do %>
-    <li><%= item %></li>
+    <li><%= "title: #{item.title}" %></li>
   <% end %>
 </ul>
