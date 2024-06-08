@@ -25,10 +25,13 @@ defmodule Goots.Player do
 
       !can_play?() ->
         Queue.add(url)
+        save_song(url)
         {:ok, :added_to_queue}
 
       true ->
-        play_now(url)
+        Queue.add(url)
+        save_song(url)
+        play_next()
         {:ok, :playing}
     end
   end
@@ -61,7 +64,6 @@ defmodule Goots.Player do
   def list(), do: Queue.list()
 
   defp play_now(url) do
-    VodHistory.save(url)
     Voice.play(@guild_id, url, :ytdl, @ytdl_config)
   end
 
@@ -72,5 +74,12 @@ defmodule Goots.Player do
   defp play_list([%VodHistory{url: url} | urls]) do
     add_song(url)
     Enum.each(urls, &Queue.add(&1.url))
+  end
+
+  defp save_song(url) do
+    case VodHistory.save(url) do
+      {:ok, v} -> VodHistory.add_metadata(v)
+      _ -> {:error, :failed_to_save}
+    end
   end
 end

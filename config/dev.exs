@@ -84,6 +84,8 @@ config :phoenix_live_view,
 # Disable swoosh api client as it is only required for production adapters.
 config :swoosh, :api_client, false
 
+config :goots, Goots.YoutubeMetadata, key: System.get_env("YOUTUBE_API_KEY", "")
+
 config :nostrum,
   token: System.get_env("BOT_TOKEN"),
   log_full_events: true,
