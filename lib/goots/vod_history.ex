@@ -35,8 +35,10 @@ defmodule Goots.VodHistory do
       {:ok, metadata} ->
         v
         |> changeset(metadata)
-        |> Repo.update
-      _ -> {:error, :invalid_metadata}
+        |> Repo.update()
+
+      _ ->
+        {:error, :invalid_metadata}
     end
   end
 
@@ -55,10 +57,11 @@ defmodule Goots.VodHistory do
   def get(_), do: []
 
   def get_by_urls(url) when not is_list(url), do: get_by_urls([url])
+
   def get_by_urls(urls) when is_list(urls) do
     __MODULE__
     |> where([u], u.url in ^urls)
-    |> Repo.all
+    |> Repo.all()
   end
 
   defp validate_url(cs) do

@@ -4,6 +4,7 @@ defmodule Goots.Utils do
   """
   @spec valid_url?(String.t() | nil) :: boolean()
   def valid_url?(nil), do: false
+
   def valid_url?(url) do
     %URI{scheme: scheme, host: host} = URI.parse(url)
     scheme != nil && host != nil && host =~ "."
@@ -12,7 +13,7 @@ defmodule Goots.Utils do
   @spec extract_video_id(String.t()) :: String.t() | nil
   def extract_video_id(url) do
     url
-    |> URI.parse
+    |> URI.parse()
     |> get_id_from_query
   end
 

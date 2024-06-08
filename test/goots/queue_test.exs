@@ -46,6 +46,7 @@ defmodule Goots.QueueTest do
   end
 
   defp pid, do: GenServer.whereis(Queue)
+
   defp queue_state do
     case :sys.get_state(pid()) do
       %{queue: queue} -> queue

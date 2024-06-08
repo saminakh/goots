@@ -21,6 +21,7 @@ defmodule Goots.Youtube do
   @spec fetch_metadata(String.t()) :: map() | {:error, String.t()}
   def fetch_metadata(video_id) do
     key = api_key()
+
     case get("/videos", query: [part: "snippet,contentDetails", id: video_id, key: key]) do
       {:ok, %{status: 200, body: %{"items" => [item | _]}}} ->
         metadata = %{
@@ -29,7 +30,9 @@ defmodule Goots.Youtube do
           channel_title: item["snippet"]["channelTitle"],
           thumbnail_url: item["snippet"]["thumbnails"]["standard"]["url"]
         }
+
         {:ok, metadata}
+
       {:ok, %{status: status, body: body}} ->
         {:error, "Error fetching video metadata: #{status} - #{inspect(body)}"}
 

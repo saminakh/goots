@@ -1,6 +1,6 @@
 <h1>Now Playing</h1>
 <%= if !is_nil(@now_playing) do %>
-  <img src={@now_playing.thumbnail_url}>
+  <img src={@now_playing.thumbnail_url} />
   <p>
     <%= "title: #{@now_playing.title}" %>
     <%= "uploader: #{@now_playing.channel_title}" %>

@@ -7,7 +7,7 @@ defmodule GootsWeb.PageController do
     # so skip the default app layout.
     items =
       Queue.list()
-      |> VodHistory.get_by_urls
+      |> VodHistory.get_by_urls()
 
     queue =
       Queue.list()
@@ -16,13 +16,15 @@ defmodule GootsWeb.PageController do
           item.url == url
         end)
       end)
+
     now_playing =
       Queue.now_playing()
-      |> VodHistory.get_by_urls
+      |> VodHistory.get_by_urls()
       |> case do
         [item] -> item
         _ -> nil
       end
+
     render(conn, :home, queue: queue, now_playing: now_playing)
   end
 end

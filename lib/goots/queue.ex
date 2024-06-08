@@ -41,7 +41,7 @@ defmodule Goots.Queue do
 
   @impl true
   def handle_cast({:enqueue, item}, %{queue: queue} = state) do
-    {:noreply, Map.put(state, :queue, (queue ++ [item]))}
+    {:noreply, Map.put(state, :queue, queue ++ [item])}
   end
 
   def start_link(_state) do

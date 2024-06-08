@@ -13,14 +13,16 @@ defmodule Goots.Repo.Migrations.BackfillYtMetadata do
           {:ok, metadata} ->
             v
             |> VodHistory.changeset(metadata)
-            |> Repo.update
-          err -> 
+            |> Repo.update()
+
+          err ->
             err
         end
       end)
-      |> Stream.run
+      |> Stream.run()
     end)
   end
+
   def down do
     :ok
   end
