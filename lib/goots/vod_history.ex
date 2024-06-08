@@ -25,22 +25,30 @@ defmodule Goots.VodHistory do
   end
 
   def save(url) do
-    %{url: url}
-    |> changeset
-    |> Repo.insert()
+    case Repo.get_by(__MODULE__, url: url) do
+      %__MODULE__{} = v ->
+        {:ok, v}
+
+      nil ->
+        %{url: url}
+        |> changeset
+        |> Repo.insert()
+    end
   end
 
-  def add_metadata(%__MODULE__{url: url} = v) do
+  def maybe_add_metadata(%__MODULE__{title: title, url: url} = v) when is_nil(title) do
     case Youtube.get_video_metadata(url) do
       {:ok, metadata} ->
         v
         |> changeset(metadata)
         |> Repo.update()
 
-      _ ->
-        {:error, :invalid_metadata}
+      err ->
+        err
     end
   end
+
+  def maybe_add_metadata(v), do: {:ok, v}
 
   def list_all do
     Repo.all(__MODULE__)
