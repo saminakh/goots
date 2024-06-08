@@ -1,34 +1,47 @@
 defmodule Goots.Queue do
+  @moduledoc """
+  Maintains a queue with 'now playing' field and a 'queue' field
+  """
   use GenServer
 
+  @default_state %{
+    now_playing: nil,
+    queue: []
+  }
+
   @impl true
-  def init(_ \\ []) do
-    {:ok, []}
+  def init(_ \\ @default_state) do
+    {:ok, @default_state}
   end
 
   @impl true
   def handle_call(:list, _from, state) do
-    {:reply, Enum.reverse(state), state}
+    {:reply, state.queue, state}
   end
 
   @impl true
   def handle_call(:reset, _from, _state) do
-    {:reply, [], []}
+    {:reply, @default_state, @default_state}
   end
 
   @impl true
-  def handle_call(:dequeue, _from, []) do
-    {:reply, nil, []}
+  def handle_call(:dequeue, _from, %{queue: []} = state) do
+    {:reply, nil, state}
   end
 
   @impl true
-  def handle_call(:dequeue, _from, [item | state]) do
-    {:reply, item, state}
+  def handle_call(:dequeue, _from, %{queue: [item | queue]} = state) do
+    {:reply, item, Map.merge(state, %{queue: queue, now_playing: item})}
   end
 
   @impl true
-  def handle_cast({:enqueue, item}, state) do
-    {:noreply, state ++ [item]}
+  def handle_call(:now_playing, _from, %{now_playing: now_playing} = state) do
+    {:reply, now_playing, state}
+  end
+
+  @impl true
+  def handle_cast({:enqueue, item}, %{queue: queue} = state) do
+    {:noreply, Map.put(state, :queue, (queue ++ [item]))}
   end
 
   def start_link(_state) do
@@ -49,5 +62,9 @@ defmodule Goots.Queue do
 
   def reset do
     GenServer.call(__MODULE__, :reset)
+  end
+
+  def now_playing do
+    GenServer.call(__MODULE__, :now_playing)
   end
 end
