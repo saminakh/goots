@@ -35,3 +35,16 @@ config :phoenix, :plug_init_mode, :runtime
 config :phoenix_live_view,
   # Enable helpful, but potentially expensive runtime checks
   enable_expensive_runtime_checks: true
+
+config :nostrum,
+  token: System.get_env("BOT_TOKEN"),
+  log_full_events: true,
+  log_dispatch_events: true,
+  gateway_intents: [
+    :guilds,
+    :guild_voice_states,
+    :guild_presences,
+    :guild_messages,
+    :direct_messages,
+    :message_content
+  ]

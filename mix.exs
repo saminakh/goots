@@ -58,7 +58,9 @@ defmodule Goots.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
-      {:nostrum, github: "Kraigie/nostrum"}
+      {:nostrum, github: "Kraigie/nostrum"},
+      {:tesla, "~> 1.9"},
+      {:hackney, "~> 1.17.0"}
     ]
   end
 
