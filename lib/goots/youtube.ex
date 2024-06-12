@@ -5,6 +5,7 @@ defmodule Goots.Youtube do
   use Tesla
   plug Tesla.Middleware.BaseUrl, "https://www.googleapis.com/youtube/v3"
   plug Tesla.Middleware.JSON
+
   alias Goots.Utils
 
   @spec get_video_metadata(String.t()) :: map() | {:error, :invalid_url} | {:error, :invalid_id}

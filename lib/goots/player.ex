@@ -67,18 +67,16 @@ defmodule Goots.Player do
     Voice.play(@guild_id, url, :ytdl, @ytdl_config)
   end
 
-  defp play_list([]), do: {:error, :empty_queue}
-  defp play_list(%VodHistory{url: url}), do: add_song(url)
-  defp play_list([%VodHistory{url: url}]), do: add_song(url)
+  defp play_list(%VodHistory{} = v), do: play_list([v])
 
-  defp play_list([%VodHistory{url: url} | urls]) do
-    add_song(url)
-    Enum.each(urls, &Queue.add(&1.url))
-  end
+  defp play_list(song_list) when is_list(song_list),
+    do: Enum.each(song_list, &add_song(&1.url))
+
+  defp play_list(_), do: {:error, :invalid_random}
 
   defp save_song(url) do
     case VodHistory.save(url) do
-      {:ok, v} -> VodHistory.add_metadata(v)
+      {:ok, v} -> VodHistory.maybe_add_metadata(v)
       _ -> {:error, :failed_to_save}
     end
   end
