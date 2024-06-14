@@ -60,7 +60,8 @@ defmodule Goots.MixProject do
       {:bandit, "~> 1.2"},
       {:nostrum, github: "Kraigie/nostrum"},
       {:tesla, "~> 1.9"},
-      {:hackney, "~> 1.17.0"}
+      {:hackney, "~> 1.17.0"},
+      {:ex_teal, "~> 0.27.7"}
     ]
   end
 
