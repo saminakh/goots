@@ -16,12 +16,13 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Deployment
 
-## Learn more
+This app is deployed using fly.io.
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+Make sure your bot token and yt api key (for fetching ty metadata) are secrets
+set on fly.io
+
+  * use `fly launch` to launch your application.
+  * use `fly deploy` to deploy new changes
+  * use `fly proxy 5433:5432 -a app-name-db` to proxy into your db
