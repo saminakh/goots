@@ -12,6 +12,9 @@ defmodule GootsWeb.ExTeal.Resources.VideoResource do
   def policy, do: ShowAndDelete
 
   @impl true
+  def search, do: [:title, :channel_title]
+
+  @impl true
   def fields,
     do: [
       ID.make(:id),
