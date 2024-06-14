@@ -1,13 +1,13 @@
 defmodule GootsWeb.PageController do
   use GootsWeb, :controller
-  alias Goots.{Queue, VodHistory}
+  alias Goots.{Queue, Video}
 
   def home(conn, _params) do
     # The home page is often custom made,
     # so skip the default app layout.
     items =
       Queue.list()
-      |> VodHistory.get_by_urls()
+      |> Video.get_by_urls()
 
     queue =
       Queue.list()
@@ -19,7 +19,7 @@ defmodule GootsWeb.PageController do
 
     now_playing =
       Queue.now_playing()
-      |> VodHistory.get_by_urls()
+      |> Video.get_by_urls()
       |> case do
         [item] -> item
         _ -> nil

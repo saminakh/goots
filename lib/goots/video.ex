@@ -1,11 +1,11 @@
-defmodule Goots.VodHistory do
+defmodule Goots.Video do
   use Ecto.Schema
   import Ecto.Query
   alias Goots.{Repo, Utils, Youtube}
 
   alias Ecto.Changeset
 
-  schema "vod_history" do
+  schema "videos" do
     field :url, :string
     field :title, :string
     field :description, :string
@@ -17,8 +17,8 @@ defmodule Goots.VodHistory do
 
   @fields ~w(url title description channel_title thumbnail_url)a
 
-  def changeset(vod \\ %__MODULE__{}, attrs) do
-    vod
+  def changeset(video \\ %__MODULE__{}, attrs) do
+    video
     |> Changeset.cast(attrs, @fields)
     |> Changeset.unique_constraint(:url)
     |> validate_url
