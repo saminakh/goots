@@ -12,11 +12,12 @@ defmodule GootsWeb.ExTeal.Resources.VideoResource do
   def policy, do: ShowAndDelete
 
   @impl true
-  def fields, do: [
-    ID.make(:id),
-    Text.make(:title),
-    Text.make(:channel_title),
-    Text.make(:description) |> hide_from_index(),
-    Text.make(:url) |> hide_from_index()
-  ]
+  def fields,
+    do: [
+      ID.make(:id),
+      Text.make(:title),
+      Text.make(:channel_title),
+      Text.make(:description) |> hide_from_index(),
+      Text.make(:url) |> hide_from_index()
+    ]
 end

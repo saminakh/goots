@@ -63,7 +63,6 @@ config :phoenix, :json_library, Jason
 
 config :nostrum, :youtubedl, "yt-dlp"
 
-
 config :ex_teal,
   repo: Goots.Repo,
   manifest: GootsWeb.ExTeal.Manifest

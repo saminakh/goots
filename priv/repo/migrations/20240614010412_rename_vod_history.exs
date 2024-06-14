@@ -7,6 +7,7 @@ defmodule Goots.Repo.Migrations.RenameVodHistory do
     rename(index(:videos, [:url], name: "vod_history_url_index"), to: "videos_url_index")
     rename(index(:videos, [:id], name: "vod_history_pkey"), to: "videos_pkey")
   end
+
   def down do
     rename table("videos"), to: table("vod_history")
     flush()
