@@ -20,6 +20,11 @@ defmodule GootsWeb.Router do
     get "/", PageController, :home
   end
 
+  scope path: "/admin" do
+    pipe_through [:browser]
+    forward("/", ExTeal.Router, namespace: "admin")
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", GootsWeb do
   #   pipe_through :api

@@ -3,7 +3,7 @@ defmodule Goots.Player do
   Module for voice player
   """
   alias Nostrum.Voice
-  alias Goots.{VodHistory, Queue, Utils}
+  alias Goots.{Video, Queue, Utils}
 
   @ytdl_config [realtime: true, volume: 0.5]
 
@@ -38,7 +38,7 @@ defmodule Goots.Player do
 
   def add_random(count) do
     with {num, ""} <- Integer.parse(count),
-         song_list <- VodHistory.get(num) do
+         song_list <- Video.get(num) do
       play_list(song_list)
     else
       _ ->
@@ -67,7 +67,7 @@ defmodule Goots.Player do
     Voice.play(@guild_id, url, :ytdl, @ytdl_config)
   end
 
-  defp play_list(%VodHistory{} = v), do: play_list([v])
+  defp play_list(%Video{} = v), do: play_list([v])
 
   defp play_list(song_list) when is_list(song_list),
     do: Enum.each(song_list, &add_song(&1.url))
@@ -75,8 +75,8 @@ defmodule Goots.Player do
   defp play_list(_), do: {:error, :invalid_random}
 
   defp save_song(url) do
-    case VodHistory.save(url) do
-      {:ok, v} -> VodHistory.maybe_add_metadata(v)
+    case Video.save(url) do
+      {:ok, v} -> Video.maybe_add_metadata(v)
       _ -> {:error, :failed_to_save}
     end
   end
