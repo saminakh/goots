@@ -7,7 +7,8 @@ defmodule Goots.Commands do
 
   require Logger
 
-  def message(%{content: content, channel_id: channel_id}), do: handle_msg(content, channel_id)
+  def message(%{content: content, channel_id: channel_id}) when is_binary(content),
+    do: content |> String.downcase() |> handle_msg(channel_id)
 
   def handle_msg("!help", channel_id) do
     msg =
