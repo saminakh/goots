@@ -1,7 +1,6 @@
 defmodule Goots.Ytdlp do
   @moduledoc """
   module for preprocessing authenticated audio url
-
   """
   @cookies_file "/app/cookies.txt"
 

@@ -5,8 +5,6 @@ defmodule Goots.Player do
   alias Nostrum.Voice
   alias Goots.{Video, Queue, Utils, Ytdlp}
 
-  @ytdl_config [realtime: true, volume: 0.5]
-
   @guild_id 231_268_398_523_219_968
 
   def play_next() do
@@ -14,7 +12,7 @@ defmodule Goots.Player do
          url when not is_nil(url) <- Queue.next() do
       play_now(url)
     else
-      err ->
+      _ ->
         :ignore
     end
   end
