@@ -3,7 +3,7 @@ defmodule Goots.Player do
   Module for voice player
   """
   alias Nostrum.Voice
-  alias Goots.{Video, Queue, Utils}
+  alias Goots.{Video, Queue, Utils, Ytdlp}
 
   @ytdl_config [realtime: true, volume: 0.5]
 
@@ -14,7 +14,8 @@ defmodule Goots.Player do
          url when not is_nil(url) <- Queue.next() do
       play_now(url)
     else
-      _ -> :ignore
+      err ->
+        :ignore
     end
   end
 
@@ -64,7 +65,10 @@ defmodule Goots.Player do
   def list(), do: Queue.list()
 
   defp play_now(url) do
-    Voice.play(@guild_id, url, :ytdl, @ytdl_config)
+    case Ytdlp.get_audio_url(url) do
+      {:ok, audio_url} -> Voice.play(@guild_id, audio_url, :url)
+      err -> err
+    end
   end
 
   defp play_list(%Video{} = v), do: play_list([v])
